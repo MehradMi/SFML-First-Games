@@ -4,10 +4,11 @@
 #include <iostream>
 
 GAME::Game::Game() : m_window("Bouncing Mushroom", sf::Vector2u(800, 700)) {
-  if (!m_mushroomTexture.loadFromFile("Assets/mushroom.png"))
+  if (!m_mushroomTexture.loadFromFile(
+          "Dev/SFML-First-Games/Bouncing-Mushroom/Assets/mushroom.png"))
     std::cerr << "Unable To Load Texture From File" << std::endl;
   m_mushroom.emplace(m_mushroomTexture);
-  m_incrementVector = sf::Vector2i(5, 5);
+  m_incrementVector = sf::Vector2i(500, 500);
 }
 
 GAME::Game::~Game() {}
@@ -33,8 +34,12 @@ void GAME::Game::MoveMushroom() {
     m_incrementVector.y = -m_incrementVector.y;
   }
 
-  m_mushroom->setPosition({m_mushroom->getPosition().x + m_incrementVector.x,
-                           m_mushroom->getPosition().y + m_incrementVector.y});
+  float fElapsed = m_elapsed.asSeconds();
+
+  m_mushroom->setPosition(
+      {m_mushroom->getPosition().x + (m_incrementVector.x * fElapsed),
+       m_mushroom->getPosition().y + (m_incrementVector.y * fElapsed)});
+  // m_mushroom->setTexture(m_(mushroomTexture);
 }
 
 void GAME::Game::Render() {
@@ -44,3 +49,7 @@ void GAME::Game::Render() {
 }
 
 GWINDOW::Window *GAME::Game::GetWindow() { return &m_window; }
+
+sf::Time GAME::Game::GetElapsed() { return m_elapsed; }
+
+void GAME::Game::RestartClock() { m_elapsed = m_clock.restart(); }
